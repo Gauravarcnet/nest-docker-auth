@@ -7,47 +7,41 @@ on:
 jobs:
   build-test-deploy:
     runs-on: self-hosted
-
     steps:
-
     - name: Checkout code
       uses: actions/checkout@v4
-
 
     - name: Install dependencies
       run: npm install
 
-
     - name: Run tests
       run: npm run test
-
 
     - name: Build project
       run: npm run build
 
-
     # ---------- STAGING ----------
     - name: Deploy to staging
       run: |
+        # ✅ FIX: Proper cleanup + skip .git
         rm -rf ~/staging-server/*
-        cp -r . ~/staging-server/
+        # Copy ALL files EXCEPT .git folder
+        rsync -av --exclude='.git' . ~/staging-server/
         cd ~/staging-server
         docker compose up -d --build
-
 
     - name: Wait for app
       run: sleep 15
 
-
     - name: Health Check
       run: curl -f http://localhost:3000
-
 
     # ---------- PRODUCTION ----------
     - name: Deploy to production
       run: |
+        # ✅ FIX: Copy from staging (already clean)
         rm -rf ~/prod-server/*
-        cp -r ~/staging-server/* ~/prod-server/
+        rsync -av ~/staging-server/ ~/prod-server/
         cd ~/prod-server
         docker compose down
         docker compose up -d --build
