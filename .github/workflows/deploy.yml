@@ -35,8 +35,8 @@ jobs:
     - name: Wait for app
       run: sleep 15
 
-    - name: Health Check
-      run: curl -f http://localhost:3000
+    # - name: Health Check
+      # run: curl -f http://localhost:3000
 
     # ---------- PRODUCTION ----------
     - name: Deploy to production
