@@ -28,6 +28,7 @@ jobs:
         # Copy ALL files EXCEPT .git folder
         rsync -av --exclude='.git' . ~/staging-server/
         cd ~/staging-server
+        docker compose down   
         docker compose up -d --build
 
     - name: Wait for app
