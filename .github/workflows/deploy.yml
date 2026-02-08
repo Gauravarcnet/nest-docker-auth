@@ -40,7 +40,7 @@ jobs:
 
 
     - name: Health Check
-      # run: curl -f http://localhost:3000/health
+      run: curl -f http://localhost:3000
 
 
     # ---------- PRODUCTION ----------
