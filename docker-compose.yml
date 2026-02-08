@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+
+  mysql:
+    image: mysql:8
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: nestdb
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  app:
+    build: .
+    container_name: nest_app
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql
+    command: sh -c "/wait-for-mysql.sh && node dist/main.js"
+
+volumes:
+  mysql_data:
