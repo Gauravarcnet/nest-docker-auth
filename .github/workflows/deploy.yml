@@ -23,6 +23,10 @@ jobs:
     # ---------- STAGING ----------
     - name: Deploy to staging
       run: |
+        echo "🔥 Killing old containers..."
+    
+        # Kill EXACT containers by name
+        docker rm -f nest_app mysql_db 2>/dev/null || true
         # ✅ FIX: Proper cleanup + skip .git
         rm -rf ~/staging-server/*
         # Copy ALL files EXCEPT .git folder
@@ -41,6 +45,11 @@ jobs:
     # ---------- PRODUCTION ----------
     - name: Deploy to production
       run: |
+
+        echo "🔥 Killing old containers..."
+    
+        # Kill EXACT containers by name
+        docker rm -f nest_app mysql_db 2>/dev/null || true
         # ✅ FIX: Copy from staging (already clean)
         rm -rf ~/prod-server/*
         rsync -av ~/staging-server/ ~/prod-server/
