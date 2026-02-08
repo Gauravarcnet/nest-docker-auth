@@ -23,25 +23,14 @@ jobs:
     # ---------- STAGING ----------
     - name: Deploy to staging
       run: |
-        echo "🔥 NUCLEAR CLEANUP STARTED"
-    
-        # Kill ALL mysql_db containers (even stuck ones)
-        docker rm -f $(docker ps -aq --filter "name=mysql_db") 2>/dev/null || true
-        
-        # Kill ALL staging containers
-        docker rm -f $(docker ps -aq --filter "name=staging") 2>/dev/null || true
-        
-        # Full docker-compose cleanup
-        cd ~/staging-server || true
-        docker compose down --volumes --rmi all --remove-orphans 2>/dev/null || true
-        
-        # Copy fresh code
+        # ✅ FIX: Proper cleanup + skip .git
         rm -rf ~/staging-server/*
+        # Copy ALL files EXCEPT .git folder
         rsync -av --exclude='.git' . ~/staging-server/
         
         # Build & start
         cd ~/staging-server
-        docker compose up -d --build --force-recreate
+        docker compose up -d --build
 
     - name: Wait for app
       run: sleep 15
