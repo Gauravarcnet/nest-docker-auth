@@ -54,7 +54,7 @@ export class UsersService {
     }
 
     return {
-      message: 'Login success',
+      message: 'Login successfully',
       userId: user.id,
       email: user.email,
     };
